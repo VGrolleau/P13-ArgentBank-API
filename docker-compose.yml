@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  argent-bank-api: 
+    image: argent-bank-api
+    ports:
+      - "3001:3001"
+    depends_on:
+      - argent-bank-db
+    command: "/usr/local/bin/npm run populate-db"
+  argent-bank-db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - "/home/wahac/Code/OpenClassrooms/Projet_13_Redux/p13-mongodb:/data/db"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=argentBankDB
