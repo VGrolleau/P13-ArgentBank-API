@@ -3,18 +3,30 @@ version: '3.8'
 services:
   argent-bank-api: 
     image: argent-bank-api
+    hostname: argent-bank-api
     ports:
       - "3001:3001"
+    external_links:
+      - mongo
     depends_on:
-      - argent-bank-db
-    command: "/usr/local/bin/npm run populate-db"
-  argent-bank-db:
-    image: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - "/home/wahac/Code/OpenClassrooms/Projet_13_Redux/p13-mongodb:/data/db"
+      - mongo
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
-      - MONGO_INITDB_DATABASE=argentBankDB
+      #- DB=mongodb+srv://antoine:antoine@mongo:27017/argent?retryWrites=true&w=majority
+      - DB=mongodb://mongo:27017/mydb
+    
+    #command: bash -c "/usr/local/bin/npm run populate-db"
+  mongo:
+    container_name: mongo
+    image: mongo
+    hostname: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./data/:/data/db
+    # environment:
+    #   - MONGO_INITDB_DATABASE=argent
+    #   - MONGO_INITDB_ROOT_USERNAME=antoine
+    #   - MONGO_INITDB_ROOT_PASSWORD=antoine
+    # volumes:
+    #   - ./init-mongo.js:/docker-entrypoint-initdb.d/mongo-init.js:ro

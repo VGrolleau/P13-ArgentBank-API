@@ -4,18 +4,23 @@ const cors = require('cors')
 const swaggerUi = require('swagger-ui-express')
 const yaml = require('yamljs')
 const swaggerDocs = yaml.load('./swagger.yaml')
-const dbConnection = require('./database/connection')
+const mongoose = require('mongoose')
 
 dotEnv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// Connect to the database
-dbConnection()
-
 // Handle CORS issues
 app.use(cors())
+
+mongoose.connect(process.env.DB,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 // Request payload middleware
 app.use(express.json())
@@ -30,7 +35,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.get('/', (req, res, next) => {
-  res.send('Hello from my Express server v2!')
+  res.send('Hello from my Express server v2! ' + process.env.DB)
 })
 
 app.listen(PORT, () => {

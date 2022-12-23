@@ -1,9 +1,8 @@
-FROM node:10.16.0-alpine
+FROM node:10
 WORKDIR /usr/src/app
 RUN mkdir server
-COPY server/ server/
-COPY package.json .
-COPY .env .
+COPY package.json .env swagger.yaml ./
 RUN /usr/local/bin/npm install
+COPY server/ server/
 EXPOSE 3001
-CMD ["/usr/local/bin/npm", "run", "dev:server"]
+CMD [ "node", "./server/server.js" ]
